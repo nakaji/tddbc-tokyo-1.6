@@ -14,6 +14,7 @@ namespace TDDBCTest
             t16Main = new T16Main();
         }
 
+        #region T16MAIN-1: putでkeyとvalueを追加し、dumpで一覧表示、getでkeyに対応するvalueを取得できる
         [Test]
         public void Getで指定したkeyのvalueを取得()
         {
@@ -45,7 +46,9 @@ namespace TDDBCTest
         {
             t16Main.Put("hoge", null);
         }
+        #endregion
 
+        #region T16MAIN-2: deleteで指定のkey-valueを削除
         [Test]
         public void Deleteで指定のkeyvalueを削除()
         {
@@ -68,5 +71,18 @@ namespace TDDBCTest
         {
             t16Main.Delete(null);
         }
+        #endregion
+
+        #region T16MAIN-3: putの引数に既に存在するkeyが指定された場合、valueのみを更新する
+        [Test]
+        public void Putで既に存在するkeyの場合はvalueを更新する()
+        {
+            t16Main.Put("HOGE", "fuga");
+            t16Main.Put("HOGE", "piyo");
+            string result = t16Main.Get("HOGE");
+
+            Assert.That(result, Is.EqualTo("piyo"));
+        }
+        #endregion
     }
 }

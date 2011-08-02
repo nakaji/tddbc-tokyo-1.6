@@ -9,8 +9,14 @@ namespace TDDBC
 
         public void Put(string key, string value)
         {
-            _set.Add(key, value);
-
+            if (_set.ContainsKey(key))
+            {
+                _set[key] = value;
+            }
+            else
+            {
+                _set.Add(key, value);
+            }
         }
 
         public string Get(string key)
