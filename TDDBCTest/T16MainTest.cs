@@ -1,5 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using TDDBC;
+using System.Collections.Generic;
 
 namespace TDDBCTest
 {
@@ -33,7 +35,7 @@ namespace TDDBCTest
 
             Assert.That(result, Is.EqualTo("999\n111\n"));
         }
-        
+
         [Test]
         [ExpectedException("System.ArgumentNullException")]
         public void keyにnullをわたすと例外が発生()
@@ -82,6 +84,68 @@ namespace TDDBCTest
             string result = t16Main.Get("HOGE");
 
             Assert.That(result, Is.EqualTo("piyo"));
+        }
+        #endregion
+
+        #region T16MAIN-4: keyとvalueのセットを一度に複数追加できる
+        [Test]
+        public void 複数のkeyとvalueをまとめて追加できる()
+        {
+            var list = new List<string[]>();
+            list.Add(new string[] { "AA", "111" });
+            list.Add(new string[] { "BB", "222" });
+            list.Add(new string[] { "CC", "333" });
+            t16Main.Put(list);
+
+            Assert.That(t16Main.Get("AA"), Is.EqualTo("111"));
+            Assert.That(t16Main.Get("BB"), Is.EqualTo("222"));
+            Assert.That(t16Main.Get("CC"), Is.EqualTo("333"));
+        }
+
+        [Test]
+        public void 同じキーが複数ある場合は一番最後に指定されたものが使用される()
+        {
+            var list = new List<string[]>();
+            list.Add(new string[] { "AA", "111" });
+            list.Add(new string[] { "AA", "222" });
+            list.Add(new string[] { "CC", "333" });
+            t16Main.Put(list);
+
+            Assert.That(t16Main.Get("AA"), Is.EqualTo("222"));
+            Assert.That(t16Main.Get("CC"), Is.EqualTo("333"));
+        }
+
+        [Test]
+        public void 既に存在するキーがある場合も今回指定したものが優先される()
+        {
+            t16Main.Put("AA", "fuga");
+
+            var list = new List<string[]>();
+            list.Add(new string[] { "AA", "222" });
+            list.Add(new string[] { "CC", "333" });
+            t16Main.Put(list);
+
+            Assert.That(t16Main.Get("AA"), Is.EqualTo("222"));
+            Assert.That(t16Main.Get("CC"), Is.EqualTo("333"));
+        }
+
+        [Test]
+        public void 指定した引数の中にnullのキーがある場合は例外を投げて状態を元に戻す()
+        {
+            t16Main.Put("AA", "fuga");
+
+            var list = new List<string[]>();
+            list.Add(new string[] { "BB", "222" });
+            list.Add(new string[] { null, "333" });
+            try
+            {
+                t16Main.Put(list);
+            }
+            catch (ArgumentNullException ex)
+            {
+                Assert.That(t16Main.Get("AA"), Is.EqualTo("fuga"));
+                Assert.That(t16Main.Get("BB"), Is.EqualTo(null));
+            }
         }
         #endregion
     }
