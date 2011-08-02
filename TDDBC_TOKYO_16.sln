@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDBC", "TDDBC\TDDBC.csproj", "{D48FF09D-B80F-48B1-A02F-72535E8CEE42}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TDDBCTest", "TDDBCTest\TDDBCTest.csproj", "{9DEC4A29-8BF6-443B-85A9-FC20B01C3BA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{D48FF09D-B80F-48B1-A02F-72535E8CEE42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D48FF09D-B80F-48B1-A02F-72535E8CEE42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D48FF09D-B80F-48B1-A02F-72535E8CEE42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9DEC4A29-8BF6-443B-85A9-FC20B01C3BA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9DEC4A29-8BF6-443B-85A9-FC20B01C3BA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9DEC4A29-8BF6-443B-85A9-FC20B01C3BA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9DEC4A29-8BF6-443B-85A9-FC20B01C3BA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
