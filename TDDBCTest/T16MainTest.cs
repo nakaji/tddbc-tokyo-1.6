@@ -8,20 +8,20 @@ namespace TDDBCTest
     [TestFixture]
     public class T16MainTest
     {
-        private T16Main t16Main;
+        private T16Main _t16Main;
 
         [SetUp]
         public void SetUp()
         {
-            t16Main = new T16Main();
+            _t16Main = new T16Main();
         }
 
         #region T16MAIN-1: putでkeyとvalueを追加し、dumpで一覧表示、getでkeyに対応するvalueを取得できる
         [Test]
         public void Getで指定したkeyのvalueを取得()
         {
-            t16Main.Put("AA", "999");
-            string result = t16Main.Get("AA");
+            _t16Main.Put("AA", "999");
+            string result = _t16Main.Get("AA");
 
             Assert.That(result, Is.EqualTo("999"));
         }
@@ -29,9 +29,9 @@ namespace TDDBCTest
         [Test]
         public void Dumpで登録されている一覧を表示()
         {
-            t16Main.Put("AA", "999");
-            t16Main.Put("ZZ", "111");
-            string result = t16Main.Dump();
+            _t16Main.Put("AA", "999");
+            _t16Main.Put("ZZ", "111");
+            string result = _t16Main.Dump();
 
             Assert.That(result, Is.EqualTo("999\n111\n"));
         }
@@ -40,13 +40,13 @@ namespace TDDBCTest
         [ExpectedException("System.ArgumentNullException")]
         public void keyにnullをわたすと例外が発生()
         {
-            t16Main.Put(null, "999");
+            _t16Main.Put(null, "999");
         }
 
         [Test]
         public void valueのnullは許容する()
         {
-            t16Main.Put("hoge", null);
+            _t16Main.Put("hoge", null);
         }
         #endregion
 
@@ -54,9 +54,9 @@ namespace TDDBCTest
         [Test]
         public void Deleteで指定のkeyvalueを削除()
         {
-            t16Main.Put("AA", "999");
-            t16Main.Delete("AA");
-            string result = t16Main.Get("AA");
+            _t16Main.Put("AA", "999");
+            _t16Main.Delete("AA");
+            string result = _t16Main.Get("AA");
 
             Assert.That(result, Is.EqualTo(null));
         }
@@ -64,14 +64,14 @@ namespace TDDBCTest
         [Test]
         public void 存在しないkeyが渡されたら何もしない()
         {
-            t16Main.Delete("AA");
+            _t16Main.Delete("AA");
         }
 
         [Test]
         [ExpectedException("System.ArgumentNullException")]
         public void nullを渡すと例外が発生する()
         {
-            t16Main.Delete(null);
+            _t16Main.Delete(null);
         }
         #endregion
 
@@ -79,9 +79,9 @@ namespace TDDBCTest
         [Test]
         public void Putで既に存在するkeyの場合はvalueを更新する()
         {
-            t16Main.Put("HOGE", "fuga");
-            t16Main.Put("HOGE", "piyo");
-            string result = t16Main.Get("HOGE");
+            _t16Main.Put("HOGE", "fuga");
+            _t16Main.Put("HOGE", "piyo");
+            string result = _t16Main.Get("HOGE");
 
             Assert.That(result, Is.EqualTo("piyo"));
         }
@@ -91,60 +91,68 @@ namespace TDDBCTest
         [Test]
         public void 複数のkeyとvalueをまとめて追加できる()
         {
-            var list = new List<string[]>();
-            list.Add(new string[] { "AA", "111" });
-            list.Add(new string[] { "BB", "222" });
-            list.Add(new string[] { "CC", "333" });
-            t16Main.Put(list);
+            var list = new List<string[]>
+                           {
+                               new[] {"AA", "111"}, 
+                               new[] {"BB", "222"}, 
+                               new[] {"CC", "333"}
+                           };
+            _t16Main.Put(list);
 
-            Assert.That(t16Main.Get("AA"), Is.EqualTo("111"));
-            Assert.That(t16Main.Get("BB"), Is.EqualTo("222"));
-            Assert.That(t16Main.Get("CC"), Is.EqualTo("333"));
+            Assert.That(_t16Main.Get("AA"), Is.EqualTo("111"));
+            Assert.That(_t16Main.Get("BB"), Is.EqualTo("222"));
+            Assert.That(_t16Main.Get("CC"), Is.EqualTo("333"));
         }
 
         [Test]
         public void 同じキーが複数ある場合は一番最後に指定されたものが使用される()
         {
-            var list = new List<string[]>();
-            list.Add(new string[] { "AA", "111" });
-            list.Add(new string[] { "AA", "222" });
-            list.Add(new string[] { "CC", "333" });
-            t16Main.Put(list);
+            var list = new List<string[]>
+                           {
+                               new[] {"AA", "111"},
+                               new[] {"AA", "222"}, 
+                               new[] {"CC", "333"}
+                           };
+            _t16Main.Put(list);
 
-            Assert.That(t16Main.Get("AA"), Is.EqualTo("222"));
-            Assert.That(t16Main.Get("CC"), Is.EqualTo("333"));
+            Assert.That(_t16Main.Get("AA"), Is.EqualTo("222"));
+            Assert.That(_t16Main.Get("CC"), Is.EqualTo("333"));
         }
 
         [Test]
         public void 既に存在するキーがある場合も今回指定したものが優先される()
         {
-            t16Main.Put("AA", "fuga");
+            _t16Main.Put("AA", "fuga");
 
-            var list = new List<string[]>();
-            list.Add(new string[] { "AA", "222" });
-            list.Add(new string[] { "CC", "333" });
-            t16Main.Put(list);
+            var list = new List<string[]>
+                           {
+                               new[] {"AA", "222"},
+                               new[] {"CC", "333"}
+                           };
+            _t16Main.Put(list);
 
-            Assert.That(t16Main.Get("AA"), Is.EqualTo("222"));
-            Assert.That(t16Main.Get("CC"), Is.EqualTo("333"));
+            Assert.That(_t16Main.Get("AA"), Is.EqualTo("222"));
+            Assert.That(_t16Main.Get("CC"), Is.EqualTo("333"));
         }
 
         [Test]
         public void 指定した引数の中にnullのキーがある場合は例外を投げて状態を元に戻す()
         {
-            t16Main.Put("AA", "fuga");
+            _t16Main.Put("AA", "fuga");
 
-            var list = new List<string[]>();
-            list.Add(new string[] { "BB", "222" });
-            list.Add(new string[] { null, "333" });
+            var list = new List<string[]>
+                           {
+                               new[] {"BB", "222"}, 
+                               new[] {null, "333"}
+                           };
             try
             {
-                t16Main.Put(list);
+                _t16Main.Put(list);
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentNullException)
             {
-                Assert.That(t16Main.Get("AA"), Is.EqualTo("fuga"));
-                Assert.That(t16Main.Get("BB"), Is.EqualTo(null));
+                Assert.That(_t16Main.Get("AA"), Is.EqualTo("fuga"));
+                Assert.That(_t16Main.Get("BB"), Is.EqualTo(null));
             }
         }
         #endregion
