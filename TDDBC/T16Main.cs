@@ -5,9 +5,9 @@ namespace TDDBC
 {
     public class T16Main
     {
-        private Dictionary<string,string> _set = new Dictionary<string,string>();
+        private Dictionary<string, string> _set = new Dictionary<string, string>();
 
-        public void Put(string key,string value)
+        public void Put(string key, string value)
         {
             _set.Add(key, value);
 
@@ -15,6 +15,7 @@ namespace TDDBC
 
         public string Get(string key)
         {
+            if (!_set.ContainsKey(key)) return null;
             return _set[key];
         }
 
@@ -23,6 +24,11 @@ namespace TDDBC
             string result = "";
             _set.ToList().ForEach(x => { result += x.Value + "\n"; });
             return result;
+        }
+
+        public void Delete(string key)
+        {
+            _set.Remove(key);
         }
     }
 }
